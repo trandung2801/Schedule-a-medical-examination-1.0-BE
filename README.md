@@ -26,3 +26,4 @@ Syntax install lib:
     npm install --save-dev mysql2@2.2.5
 	npm install --save-dev
 	npm install --save-dev @babel/core@7.12.10 @babel/node@7.12.10 @babel/preset-env@7.12.10 nodemon@2.0.7
+	npm install --save-dev cors@2.8.5
