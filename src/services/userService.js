@@ -44,7 +44,7 @@ let handleUserLogin = (email, password) => {
 
       if (isExist) {
         let user = await db.User.findOne({
-          attributes: ["email", "roleId", "password"],
+          attributes: ["email", "roleId", "password", "firstName", "lastName"],
           where: { email: email },
           raw: true,
         });
@@ -106,7 +106,7 @@ let createNewUser = (data) => {
       if (checkEmail === true) {
         resolve({
           errCode: 1,
-          message: "Your email is already in used, Please try another email",
+          errMessage: "Your email is already in used, Please try another email",
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
@@ -132,6 +132,7 @@ let createNewUser = (data) => {
 };
 
 let deleteUser = (userId) => {
+  console.log(userId);
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
@@ -168,7 +169,7 @@ let updateUser = (data) => {
       }
       let user = await db.User.findOne({
         where: { id: data.id },
-        raw: false
+        raw: false,
       });
       if (user) {
         user.firstName = data.firstName;
@@ -196,10 +197,37 @@ let updateUser = (data) => {
   });
 };
 
+let getAllCodeServices = (typeInput) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!typeInput) {
+        resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters",
+        });
+      } else {
+        let res = {};
+        let allcode = await db.Allcode.findAll({
+          where: {
+            type: typeInput,
+          },
+        });
+        res.errCode = 0;
+        res.data = allcode;
+        resolve(res);
+        resolve(data);
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   handleUserLogin: handleUserLogin,
   getAllUsers: getAllUsers,
   createNewUser: createNewUser,
   deleteUser: deleteUser,
   updateUser: updateUser,
+  getAllCodeServices: getAllCodeServices,
 };
